@@ -16,7 +16,7 @@ const steps = [
 ];
 
 const benefits = [
-  { en: "General / Single Parent", mr: "सामान्य / एकल पालक", amount: "₹2,250", color: "bg-orange-100 text-orange-800" },
+  { en: "General / Single Parent", mr: "सामान्य / एकल पालक", amount: "₹2,250", color: "bg-pink-100 text-pink-800" },
   { en: "Full Orphan (Both Parents Deceased)", mr: "पूर्ण अनाथ (दोन्ही पालक मृत)", amount: "₹2,500", color: "bg-blue-100 text-blue-800" },
   { en: "COVID-19 Orphan", mr: "कोविड-१९ अनाथ", amount: "₹2,500", color: "bg-green-100 text-green-800" },
   { en: "Administrative Grant (per Sanstha)", mr: "प्रशासकीय अनुदान (प्रति संस्था)", amount: "₹75/child", color: "bg-purple-100 text-purple-800" },
@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary via-orange-600 to-secondary text-white py-16 md:py-24">
+      <section className="bg-gradient-to-br from-secondary via-purple-700 to-primary text-white py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <div className="flex justify-center mb-6">

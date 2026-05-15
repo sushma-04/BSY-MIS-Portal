@@ -21,7 +21,7 @@ function statusColor(status: string) {
     case "rejected": return "bg-red-100 text-red-800";
     case "submitted": return "bg-blue-100 text-blue-800";
     case "under_review": return "bg-yellow-100 text-yellow-800";
-    case "pending_documents": return "bg-orange-100 text-orange-800";
+    case "pending_documents": return "bg-amber-100 text-amber-800";
     case "forwarded_to_po": return "bg-purple-100 text-purple-800";
     case "pwc_scheduled": return "bg-indigo-100 text-indigo-800";
     default: return "bg-gray-100 text-gray-800";
@@ -291,7 +291,7 @@ export default function Dashboard() {
                             <p className="text-xs text-muted-foreground">{b.district} • ₹{Number(b.monthlyAmount).toLocaleString("en-IN")}/mo</p>
                           </div>
                           <div className="flex items-center gap-2">
-                            {b.eligibilityRisk && <AlertCircle className="h-4 w-4 text-orange-500" title="Risk" />}
+                            {b.eligibilityRisk && <AlertCircle className="h-4 w-4 text-amber-500" title="Risk" />}
                             {b.renewalDue && <RotateCcw className="h-4 w-4 text-yellow-500" title="Renewal Due" />}
                             <Badge className={`text-xs ${b.status === "active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
                               {statusLabel(b.status, language)}
@@ -386,7 +386,7 @@ export default function Dashboard() {
                     <div key={n.id} className={`p-2.5 rounded-lg border text-xs ${!n.isRead ? "bg-blue-50 border-blue-200" : "bg-white border-border"}`}>
                       <div className="flex items-start gap-1.5">
                         {n.type === "success" ? <CheckCircle className="h-3.5 w-3.5 text-green-500 flex-shrink-0 mt-0.5" /> :
-                          n.type === "warning" ? <AlertCircle className="h-3.5 w-3.5 text-orange-500 flex-shrink-0 mt-0.5" /> :
+                          n.type === "warning" ? <AlertCircle className="h-3.5 w-3.5 text-amber-500 flex-shrink-0 mt-0.5" /> :
                             <Bell className="h-3.5 w-3.5 text-blue-500 flex-shrink-0 mt-0.5" />}
                         <div>
                           <p className="font-semibold text-foreground">{n.title}</p>

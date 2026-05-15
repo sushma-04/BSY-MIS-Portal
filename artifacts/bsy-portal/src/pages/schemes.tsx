@@ -73,7 +73,7 @@ export default function Schemes() {
                   <div className="flex items-start justify-between gap-2 mb-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <Badge className={scheme.targetGroup === "children" ? "bg-orange-100 text-orange-800 border-orange-200" : "bg-blue-100 text-blue-800 border-blue-200"}>
+                        <Badge className={scheme.targetGroup === "children" ? "bg-pink-100 text-pink-800 border-pink-200" : "bg-purple-100 text-purple-800 border-purple-200"}>
                           {scheme.targetGroup === "children" ? (language === "en" ? "Children" : "मुले") : (language === "en" ? "Women" : "महिला")}
                         </Badge>
                       </div>
