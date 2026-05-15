@@ -1,22 +1,31 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: BSY MIS Portal API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: auth
+  - name: applications
+  - name: documents
+  - name: reviews
+  - name: sir
+  - name: meetings
+  - name: beneficiaries
+  - name: payments
+  - name: notifications
+  - name: dashboard
+  - name: sanstha
+  - name: schemes
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +33,620 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/register:
+    post:
+      operationId: registerApplicant
+      tags: [auth]
+      summary: Register new applicant with mobile OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/send-otp:
+    post:
+      operationId: sendOtp
+      tags: [auth]
+      summary: Send OTP to mobile number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendOtpInput"
+      responses:
+        "200":
+          description: OTP sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OtpSentResponse"
+
+  /auth/verify-otp:
+    post:
+      operationId: verifyOtp
+      tags: [auth]
+      summary: Verify OTP and login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyOtpInput"
+      responses:
+        "200":
+          description: Verified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/login:
+    post:
+      operationId: staffLogin
+      tags: [auth]
+      summary: Staff login with username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StaffLoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/me:
+    get:
+      operationId: getCurrentUser
+      tags: [auth]
+      summary: Get current authenticated user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /applications:
+    get:
+      operationId: listApplications
+      tags: [applications]
+      summary: List applications (filtered by role)
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: page
+          in: query
+          schema:
+            type: ["integer", "null"]
+        - name: limit
+          in: query
+          schema:
+            type: ["integer", "null"]
+      responses:
+        "200":
+          description: List of applications
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationListResponse"
+    post:
+      operationId: createApplication
+      tags: [applications]
+      summary: Create new application
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /applications/{id}:
+    get:
+      operationId: getApplication
+      tags: [applications]
+      summary: Get application by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Application
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+    patch:
+      operationId: updateApplication
+      tags: [applications]
+      summary: Update application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /applications/{id}/submit:
+    post:
+      operationId: submitApplication
+      tags: [applications]
+      summary: Submit application for review
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /applications/{id}/documents:
+    get:
+      operationId: listDocuments
+      tags: [documents]
+      summary: Get documents for application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Document"
+    post:
+      operationId: uploadDocument
+      tags: [documents]
+      summary: Upload a document for application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentInput"
+      responses:
+        "201":
+          description: Document uploaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+
+  /applications/{id}/review:
+    post:
+      operationId: reviewApplication
+      tags: [reviews]
+      summary: GIMABA review action on application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewInput"
+      responses:
+        "200":
+          description: Review recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+
+  /applications/{id}/sir:
+    get:
+      operationId: getSir
+      tags: [sir]
+      summary: Get SIR report for application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: SIR report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SirReport"
+    post:
+      operationId: submitSir
+      tags: [sir]
+      summary: Protection Officer submits SIR report
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SirInput"
+      responses:
+        "201":
+          description: SIR submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SirReport"
+
+  /meetings:
+    get:
+      operationId: listMeetings
+      tags: [meetings]
+      summary: List PWC meetings
+      responses:
+        "200":
+          description: Meetings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Meeting"
+    post:
+      operationId: scheduleMeeting
+      tags: [meetings]
+      summary: Schedule a PWC meeting
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MeetingInput"
+      responses:
+        "201":
+          description: Meeting scheduled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Meeting"
+
+  /meetings/{id}:
+    get:
+      operationId: getMeeting
+      tags: [meetings]
+      summary: Get meeting by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Meeting
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Meeting"
+
+  /meetings/{id}/decision:
+    post:
+      operationId: recordMeetingDecision
+      tags: [meetings]
+      summary: Record PWC meeting decision
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DecisionInput"
+      responses:
+        "200":
+          description: Decision recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Meeting"
+
+  /beneficiaries:
+    get:
+      operationId: listBeneficiaries
+      tags: [beneficiaries]
+      summary: List beneficiaries
+      parameters:
+        - name: sansthaId
+          in: query
+          schema:
+            type: ["integer", "null"]
+        - name: aadhaarSeeded
+          in: query
+          schema:
+            type: ["boolean", "null"]
+      responses:
+        "200":
+          description: Beneficiaries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Beneficiary"
+
+  /beneficiaries/{id}:
+    get:
+      operationId: getBeneficiary
+      tags: [beneficiaries]
+      summary: Get beneficiary by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Beneficiary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Beneficiary"
+
+  /beneficiaries/{id}/payments:
+    get:
+      operationId: getBeneficiaryPayments
+      tags: [payments]
+      summary: Get payment history for beneficiary
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Payment records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaymentRecord"
+
+  /payments:
+    get:
+      operationId: listPayments
+      tags: [payments]
+      summary: List all payment records
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: month
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: Payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaymentRecord"
+
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      summary: Get notifications for current user
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+
+  /notifications/{id}/read:
+    post:
+      operationId: markNotificationRead
+      tags: [notifications]
+      summary: Mark notification as read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Marked read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+
+  /dashboard/stats:
+    get:
+      operationId: getDashboardStats
+      tags: [dashboard]
+      summary: Get role-specific dashboard statistics
+      responses:
+        "200":
+          description: Dashboard stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /dashboard/recent-activity:
+    get:
+      operationId: getRecentActivity
+      tags: [dashboard]
+      summary: Get recent activity feed
+      responses:
+        "200":
+          description: Recent activity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  /sanstha:
+    get:
+      operationId: listSanstha
+      tags: [sanstha]
+      summary: List all registered sansthas/NGOs
+      responses:
+        "200":
+          description: Sansthas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Sanstha"
+
+  /sanstha/{id}:
+    get:
+      operationId: getSanstha
+      tags: [sanstha]
+      summary: Get sanstha by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Sanstha
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Sanstha"
+
+  /sanstha/{id}/students:
+    get:
+      operationId: getSansthaStudents
+      tags: [sanstha]
+      summary: Get students enrolled in sanstha
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Beneficiary"
+
+  /schemes:
+    get:
+      operationId: listSchemes
+      tags: [schemes]
+      summary: List related government welfare schemes
+      responses:
+        "200":
+          description: Schemes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Scheme"
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +654,558 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        mobile:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [applicant, facilitator, sanstha, gimaba, po, pwc]
+        district:
+          type: ["string", "null"]
+        sansthaId:
+          type: ["integer", "null"]
+        status:
+          type: string
+        createdAt:
+          type: string
+      required: [id, mobile, name, role, status, createdAt]
+
+    RegisterInput:
+      type: object
+      properties:
+        mobile:
+          type: string
+        name:
+          type: string
+        otp:
+          type: string
+      required: [mobile, name, otp]
+
+    SendOtpInput:
+      type: object
+      properties:
+        mobile:
+          type: string
+      required: [mobile]
+
+    OtpSentResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        expiresIn:
+          type: integer
+      required: [message, expiresIn]
+
+    VerifyOtpInput:
+      type: object
+      properties:
+        mobile:
+          type: string
+        otp:
+          type: string
+      required: [mobile, otp]
+
+    StaffLoginInput:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+      required: [username, password, role]
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+        message:
+          type: string
+      required: [user, token, message]
+
+    Application:
+      type: object
+      properties:
+        id:
+          type: integer
+        applicationNumber:
+          type: string
+        applicantId:
+          type: integer
+        childName:
+          type: string
+        childDob:
+          type: string
+        childGender:
+          type: string
+        aadhaarNumber:
+          type: string
+        casteCategory:
+          type: string
+        beneficiaryCategory:
+          type: string
+        guardianName:
+          type: string
+        guardianMobile:
+          type: string
+        annualIncome:
+          type: number
+        district:
+          type: string
+        taluka:
+          type: string
+        address:
+          type: string
+        sansthaId:
+          type: ["integer", "null"]
+        facilitatorType:
+          type: ["string", "null"]
+        financialYear:
+          type: string
+        status:
+          type: string
+          enum: [draft, submitted, under_review, pending_documents, forwarded_to_po, sir_pending, pwc_scheduled, approved, rejected]
+        aadhaarSeeded:
+          type: boolean
+        submittedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required: [id, applicationNumber, applicantId, childName, childDob, childGender, aadhaarNumber, casteCategory, beneficiaryCategory, guardianName, guardianMobile, annualIncome, district, taluka, address, financialYear, status, aadhaarSeeded, createdAt, updatedAt]
+
+    ApplicationListResponse:
+      type: object
+      properties:
+        applications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Application"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+      required: [applications, total, page, limit]
+
+    ApplicationInput:
+      type: object
+      properties:
+        childName:
+          type: string
+        childDob:
+          type: string
+        childGender:
+          type: string
+        aadhaarNumber:
+          type: string
+        casteCategory:
+          type: string
+        beneficiaryCategory:
+          type: string
+        guardianName:
+          type: string
+        guardianMobile:
+          type: string
+        annualIncome:
+          type: number
+        district:
+          type: string
+        taluka:
+          type: string
+        address:
+          type: string
+        sansthaId:
+          type: ["integer", "null"]
+        facilitatorType:
+          type: ["string", "null"]
+        bankAccountNumber:
+          type: string
+        ifscCode:
+          type: string
+        accountHolderName:
+          type: string
+        fatherStatus:
+          type: string
+        motherStatus:
+          type: string
+        schoolName:
+          type: ["string", "null"]
+        currentClass:
+          type: ["string", "null"]
+        pincode:
+          type: string
+      required: [childName, childDob, childGender, aadhaarNumber, casteCategory, beneficiaryCategory, guardianName, guardianMobile, annualIncome, district, taluka, address, bankAccountNumber, ifscCode, accountHolderName, fatherStatus, motherStatus, pincode]
+
+    ApplicationUpdate:
+      type: object
+      properties:
+        childName:
+          type: string
+        guardianName:
+          type: string
+        address:
+          type: string
+        annualIncome:
+          type: number
+        bankAccountNumber:
+          type: string
+        ifscCode:
+          type: string
+        accountHolderName:
+          type: string
+        schoolName:
+          type: ["string", "null"]
+        currentClass:
+          type: ["string", "null"]
+
+    Document:
+      type: object
+      properties:
+        id:
+          type: integer
+        applicationId:
+          type: integer
+        docType:
+          type: string
+        fileUrl:
+          type: string
+        fileName:
+          type: string
+        uploadedAt:
+          type: string
+        verifiedBy:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [pending, verified, rejected]
+      required: [id, applicationId, docType, fileUrl, fileName, uploadedAt, status]
+
+    DocumentInput:
+      type: object
+      properties:
+        docType:
+          type: string
+        fileUrl:
+          type: string
+        fileName:
+          type: string
+      required: [docType, fileUrl, fileName]
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+        applicationId:
+          type: integer
+        reviewerId:
+          type: integer
+        action:
+          type: string
+          enum: [approved, rejected, forwarded_to_po, requested_documents]
+        reason:
+          type: ["string", "null"]
+        actionDate:
+          type: string
+      required: [id, applicationId, reviewerId, action, actionDate]
+
+    ReviewInput:
+      type: object
+      properties:
+        action:
+          type: string
+          enum: [approved, rejected, forwarded_to_po, requested_documents]
+        reason:
+          type: ["string", "null"]
+      required: [action]
+
+    SirReport:
+      type: object
+      properties:
+        id:
+          type: integer
+        applicationId:
+          type: integer
+        poId:
+          type: integer
+        visitDate:
+          type: string
+        geoLat:
+          type: ["number", "null"]
+        geoLng:
+          type: ["number", "null"]
+        photoUrls:
+          type: array
+          items:
+            type: string
+        recommendation:
+          type: string
+          enum: [recommended, not_recommended, further_inquiry]
+        observations:
+          type: string
+        submittedAt:
+          type: string
+      required: [id, applicationId, poId, visitDate, recommendation, observations, submittedAt, photoUrls]
+
+    SirInput:
+      type: object
+      properties:
+        visitDate:
+          type: string
+        geoLat:
+          type: ["number", "null"]
+        geoLng:
+          type: ["number", "null"]
+        photoUrls:
+          type: array
+          items:
+            type: string
+        recommendation:
+          type: string
+          enum: [recommended, not_recommended, further_inquiry]
+        observations:
+          type: string
+      required: [visitDate, recommendation, observations, photoUrls]
+
+    Meeting:
+      type: object
+      properties:
+        id:
+          type: integer
+        applicationId:
+          type: integer
+        scheduledDate:
+          type: string
+        mode:
+          type: string
+          enum: [online, offline]
+        venueOrLink:
+          type: string
+        status:
+          type: string
+          enum: [scheduled, completed, cancelled]
+        decision:
+          type: ["string", "null"]
+          enum: [approved, rejected, null]
+        decisionReason:
+          type: ["string", "null"]
+        minutes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required: [id, applicationId, scheduledDate, mode, venueOrLink, status, createdAt]
+
+    MeetingInput:
+      type: object
+      properties:
+        applicationId:
+          type: integer
+        scheduledDate:
+          type: string
+        mode:
+          type: string
+          enum: [online, offline]
+        venueOrLink:
+          type: string
+      required: [applicationId, scheduledDate, mode, venueOrLink]
+
+    DecisionInput:
+      type: object
+      properties:
+        decision:
+          type: string
+          enum: [approved, rejected]
+        decisionReason:
+          type: string
+        minutes:
+          type: ["string", "null"]
+      required: [decision, decisionReason]
+
+    Beneficiary:
+      type: object
+      properties:
+        id:
+          type: integer
+        applicationId:
+          type: integer
+        childName:
+          type: string
+        district:
+          type: string
+        approvalDate:
+          type: string
+        sansthaId:
+          type: ["integer", "null"]
+        sansthaName:
+          type: ["string", "null"]
+        beneficiaryCategory:
+          type: string
+        monthlyAmount:
+          type: number
+        status:
+          type: string
+          enum: [active, inactive, aged_out, suspended]
+        aadhaarSeeded:
+          type: boolean
+        kycDone:
+          type: boolean
+        eligibilityRisk:
+          type: boolean
+        renewalDue:
+          type: boolean
+      required: [id, applicationId, childName, district, approvalDate, beneficiaryCategory, monthlyAmount, status, aadhaarSeeded, kycDone, eligibilityRisk, renewalDue]
+
+    PaymentRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        beneficiaryId:
+          type: integer
+        beneficiaryName:
+          type: string
+        paymentMonth:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum: [success, failed, pending, processing]
+        transactionRef:
+          type: ["string", "null"]
+        failureReason:
+          type: ["string", "null"]
+        processedAt:
+          type: ["string", "null"]
+      required: [id, beneficiaryId, beneficiaryName, paymentMonth, amount, status]
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        title:
+          type: string
+        message:
+          type: string
+        type:
+          type: string
+          enum: [info, success, warning, error]
+        isRead:
+          type: boolean
+        createdAt:
+          type: string
+      required: [id, userId, title, message, type, isRead, createdAt]
+
+    DashboardStats:
+      type: object
+      properties:
+        totalApplications:
+          type: integer
+        pendingReview:
+          type: integer
+        approvedBeneficiaries:
+          type: integer
+        rejectedApplications:
+          type: integer
+        pendingSIR:
+          type: integer
+        pwcScheduled:
+          type: integer
+        paymentSuccessCount:
+          type: integer
+        paymentFailureCount:
+          type: integer
+        aadhaarPendingCount:
+          type: integer
+        renewalDueCount:
+          type: integer
+        totalDisbursed:
+          type: number
+        districtTarget:
+          type: integer
+      required: [totalApplications, pendingReview, approvedBeneficiaries, rejectedApplications, pendingSIR, pwcScheduled, paymentSuccessCount, paymentFailureCount, aadhaarPendingCount, renewalDueCount, totalDisbursed, districtTarget]
+
+    ActivityItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        description:
+          type: string
+        applicationId:
+          type: ["integer", "null"]
+        timestamp:
+          type: string
+      required: [id, type, description, timestamp]
+
+    Sanstha:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        district:
+          type: string
+        maxStudents:
+          type: integer
+        enrolledCount:
+          type: integer
+        contactPerson:
+          type: string
+        mobile:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+      required: [id, name, district, maxStudents, enrolledCount, contactPerson, mobile, status]
+
+    Scheme:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        marathiName:
+          type: string
+        department:
+          type: string
+        benefit:
+          type: string
+        eligibility:
+          type: string
+        targetGroup:
+          type: string
+          enum: [children, women, both]
+        link:
+          type: ["string", "null"]
+      required: [id, name, marathiName, department, benefit, eligibility, targetGroup]

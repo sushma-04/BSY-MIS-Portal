@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "BSY MIS Portal"
+version = "1.0.0"
+id = "artifacts/bsy-portal"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24976
+
+[services.development]
+run = "pnpm --filter @workspace/bsy-portal run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/bsy-portal", "run", "build" ]
+publicDir = "artifacts/bsy-portal/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24976"
+BASE_PATH = "/"
