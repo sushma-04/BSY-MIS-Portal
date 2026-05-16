@@ -15,6 +15,7 @@ import Schemes from "@/pages/schemes";
 import About from "@/pages/about";
 import Certificates from "@/pages/certificates";
 import EkalMahila from "@/pages/ekal-mahila";
+import OrphanChildren from "@/pages/orphan-children";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,6 +39,7 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/certificates" component={Certificates} />
       <Route path="/ekal-mahila" component={EkalMahila} />
+      <Route path="/orphan-children" component={OrphanChildren} />
       <Route component={NotFound} />
     </Switch>
   );

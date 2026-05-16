@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "0DL0_9mTrQ3RqNwrZuWLB"
+uri = "file://artifacts/bsy-portal/public/hero-children.png"
+type = "image"
+title = "children welfare hero image"

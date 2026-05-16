@@ -77,74 +77,90 @@ export default function Home() {
     <div className="min-h-screen">
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-secondary via-purple-800 to-primary text-white py-16 md:py-24">
-        {/* Background SVG line art */}
+      <section className="relative overflow-hidden text-white" style={{ minHeight: "520px" }}>
+        {/* AI-generated background image */}
+        <div className="absolute inset-0">
+          <img
+            src="/hero-children.png"
+            alt="Happy children with welfare officer"
+            className="w-full h-full object-cover object-center"
+            style={{ objectPosition: "center 30%" }}
+          />
+          {/* Gradient overlay so text stays readable */}
+          <div className="absolute inset-0 bg-gradient-to-r from-secondary/90 via-secondary/70 to-primary/50" />
+          <div className="absolute inset-0 bg-gradient-to-t from-secondary/60 via-transparent to-transparent" />
+        </div>
+
+        {/* SVG line art layer on top of image */}
         <div className="absolute inset-0 pointer-events-none select-none" aria-hidden>
-          <svg width="100%" height="100%" viewBox="0 0 1200 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            {/* lotus / mandala arcs */}
-            <g stroke="white" fill="none" strokeWidth="1.5" opacity="0.12">
+          <svg width="100%" height="100%" viewBox="0 0 1200 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <g stroke="white" fill="none" strokeWidth="1.2" opacity="0.18">
               <circle cx="1100" cy="80" r="200" />
-              <circle cx="1100" cy="80" r="150" />
-              <circle cx="1100" cy="80" r="100" />
-              <circle cx="100" cy="450" r="180" />
-              <circle cx="100" cy="450" r="120" />
+              <circle cx="1100" cy="80" r="140" />
+              <circle cx="1100" cy="80" r="80" />
             </g>
-            {/* floating dots grid */}
-            <g fill="white" opacity="0.15">
-              {[0,1,2,3,4,5,6].map(col => [0,1,2,3].map(row => (
-                <circle key={`${col}-${row}`} cx={60 + col * 160} cy={60 + row * 110} r="2.5" />
+            <g fill="white" opacity="0.12">
+              {[0,1,2,3,4].map(col => [0,1,2,3].map(row => (
+                <circle key={`${col}-${row}`} cx={50 + col * 130} cy={60 + row * 110} r="2.5" />
               )))}
             </g>
-            {/* flowing wave lines */}
-            <g stroke="white" fill="none" strokeWidth="1" opacity="0.1">
-              <path d="M0,300 Q300,200 600,300 T1200,300" />
-              <path d="M0,340 Q300,240 600,340 T1200,340" strokeDasharray="6,6" />
-              <path d="M0,260 Q300,160 600,260 T1200,260" strokeDasharray="3,9" />
+            <g stroke="white" fill="none" strokeWidth="1" opacity="0.12">
+              <path d="M0,360 Q300,260 600,360 T1200,360" strokeDasharray="6,6" />
+              <path d="M0,400 Q300,300 600,400 T1200,400" strokeDasharray="3,9" />
             </g>
-            {/* child silhouette hint — simplified figure */}
-            <g fill="white" opacity="0.07" transform="translate(580,80)">
-              <circle cx="30" cy="18" r="18" />
-              <path d="M10,40 Q30,90 50,40" />
-              <line x1="30" y1="40" x2="30" y2="95" strokeWidth="12" stroke="white" strokeLinecap="round" />
-              <line x1="30" y1="55" x2="5" y2="75" strokeWidth="10" stroke="white" strokeLinecap="round" />
-              <line x1="30" y1="55" x2="55" y2="75" strokeWidth="10" stroke="white" strokeLinecap="round" />
-              <line x1="30" y1="95" x2="15" y2="130" strokeWidth="10" stroke="white" strokeLinecap="round" />
-              <line x1="30" y1="95" x2="45" y2="130" strokeWidth="10" stroke="white" strokeLinecap="round" />
-            </g>
-            {/* star accents */}
-            {[[200,120],[900,350],[300,400],[1050,200]].map(([cx,cy],i) => (
-              <g key={i} transform={`translate(${cx},${cy})`} fill="white" opacity="0.2">
+            {[[150,100],[320,380],[1020,220]].map(([cx,cy],i) => (
+              <g key={i} transform={`translate(${cx},${cy})`} fill="white" opacity="0.25">
                 <polygon points="0,-8 2,-3 7,-3 3,1 5,7 0,4 -5,7 -3,1 -7,-3 -2,-3" />
               </g>
             ))}
           </svg>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="bg-white/20 text-white border-white/30 text-sm px-4 py-1 font-semibold mb-6 inline-block">
+        <div className="container mx-auto px-4 relative z-10 py-16 md:py-24">
+          <div className="max-w-2xl">
+            <Badge className="bg-white/20 text-white border-white/30 text-sm px-4 py-1 font-semibold mb-6 inline-block backdrop-blur-sm">
               {language === "en" ? "Maharashtra Government Scheme since 2008" : "२००८ पासून महाराष्ट्र शासन योजना"}
             </Badge>
-            <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-6" data-testid="hero-title" style={{ textShadow: "0 2px 16px rgba(0,0,0,0.3)" }}>
+            <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-5" data-testid="hero-title" style={{ textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}>
               {t("home.hero.title")}
             </h1>
-            <p className="text-lg md:text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg text-white/90 mb-8 max-w-xl leading-relaxed" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.4)" }}>
               {t("home.hero.subtitle")}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/apply">
                 <Button size="lg" className="bg-white text-secondary hover:bg-white/90 font-bold px-8 shadow-lg" data-testid="btn-apply-hero">
                   {t("home.hero.cta")} <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/track">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/15 font-bold px-8" data-testid="btn-track-hero">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/15 font-bold px-8 backdrop-blur-sm" data-testid="btn-track-hero">
                   {t("home.hero.track")}
                 </Button>
               </Link>
             </div>
-            <AnimatedStats />
+
+            {/* Quick links to sub-pages */}
+            <div className="flex flex-wrap gap-2 mt-6">
+              <Link href="/orphan-children">
+                <span className="inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/25 rounded-full px-3 py-1 text-xs text-white font-medium transition-all cursor-pointer">
+                  👨‍👩‍👧 {language === "en" ? "Orphan Children" : "अनाथ मुले"}
+                </span>
+              </Link>
+              <Link href="/ekal-mahila">
+                <span className="inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/25 rounded-full px-3 py-1 text-xs text-white font-medium transition-all cursor-pointer">
+                  💜 {language === "en" ? "Ekal Mahila" : "एकल महिला"}
+                </span>
+              </Link>
+              <Link href="/certificates">
+                <span className="inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/25 rounded-full px-3 py-1 text-xs text-white font-medium transition-all cursor-pointer">
+                  🏅 {language === "en" ? "Download Certificate" : "प्रमाणपत्र डाउनलोड"}
+                </span>
+              </Link>
+            </div>
           </div>
+
+          <AnimatedStats />
         </div>
       </section>
 

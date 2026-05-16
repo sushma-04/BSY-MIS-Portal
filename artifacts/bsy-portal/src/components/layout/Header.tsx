@@ -33,7 +33,7 @@ export function Header() {
           {[
             { href: "/", label: t('nav.home') },
             { href: "/about", label: t('nav.about') },
-            { href: "/schemes", label: t('nav.schemes') },
+            { href: "/orphan-children", label: t('nav.orphanChildren') },
             { href: "/ekal-mahila", label: t('nav.ekalMahila') },
             { href: "/track", label: t('nav.track') },
             { href: "/certificates", label: t('nav.certificates') },
