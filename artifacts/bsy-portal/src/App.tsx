@@ -13,6 +13,8 @@ import Apply from "@/pages/apply";
 import Dashboard from "@/pages/dashboard";
 import Schemes from "@/pages/schemes";
 import About from "@/pages/about";
+import Certificates from "@/pages/certificates";
+import EkalMahila from "@/pages/ekal-mahila";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +36,8 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/schemes" component={Schemes} />
       <Route path="/about" component={About} />
+      <Route path="/certificates" component={Certificates} />
+      <Route path="/ekal-mahila" component={EkalMahila} />
       <Route component={NotFound} />
     </Switch>
   );
